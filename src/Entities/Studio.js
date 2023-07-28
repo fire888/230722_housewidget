@@ -1,14 +1,16 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
 
 const BACK_COLOR = 0x5577aa
 
 export const createStudio = () => {
     const container = document.querySelector('.scene-container')
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 100000)
-    camera.position.set(0, 1.7, 10)
-    scene.add(camera)
+
+    let camera
+    //const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 100000)
+    //camera.position.set(0, 1.7, 10)
+    //scene.add(camera)
 
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -30,38 +32,36 @@ export const createStudio = () => {
     const ambLight = new THREE.AmbientLight(0xffffff, .2)
     scene.add(ambLight)
 
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.minDistance = 0
-    controls.maxDistance = 200
-    controls.zoomSpeed = 1
-    controls.target.set(0, 3, -10)
-    controls.update()
+    // const controls = new OrbitControls(camera, renderer.domElement)
+    // controls.minDistance = 0
+    // controls.maxDistance = 200
+    // controls.zoomSpeed = 1
+    // controls.target.set(0, 3, -10)
+    // controls.update()
 
     return {
         scene,
+        renderer,
         addToScene(model) {
             scene.add(model)
         },
         removeFromScene(model) {
             scene.remove(model)
         },
+        setCamera: cam => {
+            camera = cam
+        },
         render () {
             if (!camera) {
                 return
             }
 
-            if (camera.position.y < 0.001) {
-                camera.position.y = 0.001
-                controls.update()
-            }
-
             renderer.render(scene, camera)
-
         },
-        setTargetCam: v => {
-            controls.target.set( v.x, v.y, v.z )
-            controls.update()
-        },
+        // setTargetCam: v => {
+        //     controls.target.set(v.x, v.y, v.z)
+        //     controls.update()
+        // },
         resize () {
             if (!camera) {
                 return;
@@ -69,9 +69,6 @@ export const createStudio = () => {
             camera.aspect = window.innerWidth / window.innerHeight
             camera.updateProjectionMatrix()
             renderer.setSize(window.innerWidth, window.innerHeight)
-        },
-        onCameraMove: func => {
-            //functionsOmCameraMove.push(func)
         },
     }
 }

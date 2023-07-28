@@ -18,11 +18,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "@as-com/pson": "^3.0.1",
-    "@turf/turf": "^6.5.0",
-    "jszip": "^3.10.1",
-    "node-dijkstra": "^2.5.0",
-    "three": "^0.141.0",
-    "turf": "^3.0.14"
+    "@tweenjs/tween.js": "^21.0.0",
+    "three": "^0.141.0"
   }
 }

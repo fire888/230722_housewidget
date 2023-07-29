@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import * as TWEEN from "@tweenjs/tween.js"
-import { Label } from "./Label";
+import { Label } from "./Label"
+import { moveObject1ToPos } from "../helpers/helpers3D"
 
 
 const SPEED_PAN = 0.005
@@ -65,7 +65,7 @@ export class WalkObject extends THREE.Object3D {
             if (!this.label.visible) {
                 return;
             }
-            moveObject1ToObject2(this, this.label)
+            moveObject1ToPos(this, [this.label.position.x, this.label.position.y + PLAYER_HEIGHT, this.label.position.z])
         }
         window.addEventListener('mouseup', onMouseUp, false)
     }
@@ -73,24 +73,4 @@ export class WalkObject extends THREE.Object3D {
     setMeshesToWalk (arr) {
         this.label.arrMeshesToWalk.push(...arr)
     }
-}
-
-
-
-const moveObject1ToObject2 = (m1, m2) => {
-    const vecTarget = new THREE.Vector3()
-    const vecSrc = new THREE.Vector3()
-
-    vecSrc.copy(m1.position)
-    vecTarget.copy(m2.position)
-    vecTarget.y += PLAYER_HEIGHT
-
-    const params = {phase: 0}
-
-    new TWEEN.Tween(params)
-        .to({phase: 1}, 700)
-        .onUpdate(() => {
-            m1.position.lerpVectors(vecSrc, vecTarget, params.phase)
-        })
-        .start()
 }

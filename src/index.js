@@ -41,6 +41,24 @@ async function runApplication () {
     ui.setOnClick('change camera', changeCamera)
     changeCamera()
 
+    let isShowFirstFloor = true
+    ui.setOnClick('1-й этаж', () => {
+        house.toggleVisible('1_', !isShowFirstFloor)
+        isShowFirstFloor = !isShowFirstFloor
+    })
+
+    let isShowSecondFloor = true
+    ui.setOnClick('2-й этаж', () => {
+        house.toggleVisible('2_', !isShowSecondFloor)
+        isShowSecondFloor = !isShowSecondFloor
+    })
+
+    let isShowThirdFloor = true
+    ui.setOnClick('крыша', () => {
+        house.toggleVisible('3_', !isShowThirdFloor)
+        isShowThirdFloor = !isShowThirdFloor
+    })
+
     const animate = () => {
         requestAnimationFrame( animate )
         TWEEN.update()

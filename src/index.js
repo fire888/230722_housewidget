@@ -39,24 +39,42 @@ async function runApplication () {
         }
     }
     ui.setOnClick('change camera', changeCamera)
-    changeCamera()
+    studio.setCamera(cameraOrbit)
 
-    let isShowFirstFloor = true
-    ui.setOnClick('1-й этаж', () => {
-        house.toggleVisible('1_', !isShowFirstFloor)
+    let isShowFirstFloor = false
+    let isShowSecondFloor = false
+
+    ui.setOnClick('1-й этаж', button => {
+        ui.clear()
+        if (isShowFirstFloor) {
+            house.toggleVisible('1_', true)
+            house.toggleVisible('2_', true, true)
+            house.toggleVisible('3_', true, true)
+        } else {
+            button.style.backgroundColor = '#FFFF00'
+            isShowSecondFloor = false
+            house.toggleVisible('1_', true)
+            house.toggleVisible('2_', false, true)
+            house.toggleVisible('3_', false, true)
+        }
         isShowFirstFloor = !isShowFirstFloor
     })
 
-    let isShowSecondFloor = true
-    ui.setOnClick('2-й этаж', () => {
-        house.toggleVisible('2_', !isShowSecondFloor)
-        isShowSecondFloor = !isShowSecondFloor
-    })
 
-    let isShowThirdFloor = true
-    ui.setOnClick('крыша', () => {
-        house.toggleVisible('3_', !isShowThirdFloor)
-        isShowThirdFloor = !isShowThirdFloor
+    ui.setOnClick('2-й этаж', button => {
+        ui.clear()
+        if (isShowSecondFloor) {
+            house.toggleVisible('1_', true)
+            house.toggleVisible('2_', true)
+            house.toggleVisible('3_', true)
+        } else {
+            button.style.backgroundColor = '#FFFF00'
+            isShowFirstFloor = false
+            house.toggleVisible('1_', false)
+            house.toggleVisible('2_', true)
+            house.toggleVisible('3_', false)
+        }
+        isShowSecondFloor = !isShowSecondFloor
     })
 
     const animate = () => {

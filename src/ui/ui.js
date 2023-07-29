@@ -13,7 +13,12 @@ export const createUi = () => {
             b.innerText = key
             wrapper.appendChild(b)
             buttons[key] = b
-            buttons[key].addEventListener('click', f)
+            buttons[key].addEventListener('click', () => f(b))
         },
+        clear: () => {
+            for (let key in buttons) {
+                buttons[key].style.backgroundColor = '#ffffff'
+            }
+        }
     }
 }

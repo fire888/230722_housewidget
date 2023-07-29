@@ -1,44 +1,45 @@
-import { createStudio } from './Entities/Studio'
 import { ASSETS } from './constants/ASSETS'
+import { createStudio } from './Entities/Studio'
 import { loadAssets } from './helpers/loadAssets'
-import { createHouse } from "./Entities/house"
-import { createLand } from "./Entities/Land"
-import { createCameraOrbit } from "./Entities/cameraOrbit"
-import { createCameraWalk } from "./Entities/cameraWalk"
+import { House } from "./Entities/House"
+import { Land } from "./Entities/Land"
+import { CameraOrbit } from "./Entities/cameraOrbit"
+import { WalkObject } from "./Entities/WalkObject"
 import { createUi } from "./ui/ui"
-import { TWEEN } from "three/examples/jsm/libs/tween.module.min";
+import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 
-/** *********************************** */
 
 async function runApplication () {
     const studio = createStudio()
     const assets = await loadAssets(ASSETS, () => {})
-    const house = createHouse(assets.house.model)
-    studio.addToScene(house.mesh)
-    const land = createLand()
-    studio.addToScene(land.mesh)
-    const cameraOrbit = createCameraOrbit(studio.renderer)
-    studio.setCamera(cameraOrbit.camera)
-    const cameraWalk = createCameraWalk()
-    studio.addToScene(cameraWalk.cone)
-    studio.addToScene(cameraWalk.containerCam)
-    cameraWalk.setMeshesToWalk(house.arrMeshesToWalk)
+
+    const house = new House(assets.house.model)
+    studio.addToScene(house)
+
+    const land = new Land()
+    studio.addToScene(land)
+
+    const cameraOrbit = new CameraOrbit(studio.renderer)
+    const walkObject = new WalkObject()
+    studio.addToScene(walkObject.label)
+    studio.addToScene(walkObject)
+    walkObject.setMeshesToWalk(house.arrMeshesToWalk)
+
     const ui = createUi()
     let currentCamera = 'orbit'
-    ui.setOnClick('change camera', () => {
+    const changeCamera = () => {
         if (currentCamera === 'orbit') {
-            studio.setCamera(cameraWalk.camera)
-            cameraWalk.toggleActive(true)
+            studio.setCamera(walkObject.camera)
+            walkObject.isActive = true
             currentCamera = 'walk'
         } else {
-            studio.setCamera(cameraOrbit.camera)
-            cameraWalk.toggleActive(false)
+            studio.setCamera(cameraOrbit)
+            walkObject.isActive = false
             currentCamera = 'orbit'
         }
-    })
-
-
-    console.log(assets)
+    }
+    ui.setOnClick('change camera', changeCamera)
+    changeCamera()
 
     const animate = () => {
         requestAnimationFrame( animate )
@@ -47,21 +48,6 @@ async function runApplication () {
         studio.render()
     }
     animate()
-
-    // const root = {
-    //     studio,
-    // }
-    //
-    // root.arrMeshesCheckHide = []
-    // root.onChangeWallVisible = (idWall, isShow) => {
-    //     for (let i = 0; i <  root.arrMeshesCheckHide.length; ++i) {
-    //         if ( root.arrMeshesCheckHide[i].idWall === idWall) {
-    //             root.arrMeshesCheckHide[i].model.visible = isShow
-    //         }
-    //     }
-    // }
-
-
 
 
     const onWindowResize = () => {

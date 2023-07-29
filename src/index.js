@@ -3,10 +3,10 @@ import { createStudio } from './Entities/Studio'
 import { loadAssets } from './helpers/loadAssets'
 import { House } from "./Entities/House"
 import { Land } from "./Entities/Land"
-import { CameraOrbit } from "./Entities/cameraOrbit"
+import { CameraOrbit } from "./Entities/CameraOrbit"
 import { WalkObject } from "./Entities/WalkObject"
 import { createUi } from "./ui/ui"
-import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
+import * as TWEEN from "@tweenjs/tween.js"
 
 
 async function runApplication () {

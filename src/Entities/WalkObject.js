@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
+import * as TWEEN from "@tweenjs/tween.js"
 import { Label } from "./Label";
 
 

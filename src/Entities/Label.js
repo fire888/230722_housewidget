@@ -10,7 +10,7 @@ export class Label extends THREE.Object3D {
         this._raycaster = new THREE.Raycaster()
         this._mouse = new THREE.Vector2()
         this._coneMesh = new THREE.Mesh(
-            new THREE.ConeBufferGeometry(.5, .5, 16, 1),
+            new THREE.ConeGeometry(.5, .5, 16, 1),
             new THREE.MeshBasicMaterial({ color: 0xff0000 })
         )
         this._coneMesh.rotation.x = Math.PI / 2

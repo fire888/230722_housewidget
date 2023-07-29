@@ -13,16 +13,16 @@ export const createStudio = () => {
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setClearColor(BACK_COLOR)
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    //renderer.shadowMap.enabled = true;
+    //renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
     container.appendChild(renderer.domElement)
 
     const fog = new THREE.Fog(BACK_COLOR, 0, 100)
     scene.fog = fog
 
-    const light = new THREE.PointLight(0xffffff, .7)
-    light.position.set(0, 15, 0)
+    const light = new THREE.PointLight(0xffffff, 300)
+    light.position.set(0, 15, 15)
     scene.add(light)
 
     const ambLight = new THREE.AmbientLight(0xffffff, .2)

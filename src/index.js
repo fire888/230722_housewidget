@@ -30,11 +30,11 @@ async function runApplication () {
     const changeCamera = () => {
         if (currentCamera === 'orbit') {
             studio.setCamera(walkObject.camera)
-            walkObject.isActive = true
+            walkObject.toggleActive(true)
             currentCamera = 'walk'
         } else {
             studio.setCamera(cameraOrbit)
-            walkObject.isActive = false
+            walkObject.toggleActive(false)
             currentCamera = 'orbit'
         }
     }

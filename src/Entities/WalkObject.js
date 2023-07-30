@@ -27,12 +27,12 @@ export class WalkObject extends THREE.Object3D {
             this.camera.rotation.x = Math.min(CAM_MAX_ROT_X, Math.max(CAM_MIN_ROT_X, rotX))
         }
 
-        this.isActive = false // disable || enable walk
-        let isPointerMoved = false // disable player move to final point in phones
-        let isMouseDowned = false // disable player move to final point in desktop
+        this._isActive = false // disable || enable walk
+        let isPointerMoved = false // disable player move to final point in phones if panStarted
+        let isMouseDowned = false // disable pan if mouse not downed
 
         window.addEventListener('pointerdown', event => {
-            if (!this.isActive) {
+            if (!this._isActive) {
                 return;
             }
             isMouseDowned = true
@@ -43,7 +43,7 @@ export class WalkObject extends THREE.Object3D {
         }, false)
 
         window.addEventListener( 'pointermove', event => {
-            if (!this.isActive) {
+            if (!this._isActive) {
                 return;
             }
             if (!isMouseDowned) {
@@ -54,7 +54,7 @@ export class WalkObject extends THREE.Object3D {
         })
 
         window.addEventListener('pointerup', event => {
-            if (!this.isActive) {
+            if (!this._isActive) {
                 return;
             }
             isMouseDowned = false
@@ -63,20 +63,23 @@ export class WalkObject extends THREE.Object3D {
                 return;
             }
             this.label.move(event.clientX, event.clientY)
-            this.label.visible = true
             moveObject1ToPos(this, [this.label.position.x, this.label.position.y + PLAYER_HEIGHT, this.label.position.z])
         })
 
         window.addEventListener('mousemove', event => {
-            if (!this.isActive) {
+            if (!this._isActive) {
                 return;
             }
             if (isMouseDowned) {
                 return;
             }
             this.label.move(event.clientX, event.clientY)
-            this.label.visible = true
         })
+    }
+
+    toggleActive (is) {
+        this.label.visible = false
+        this._isActive = is
     }
 
     setMeshesToWalk (arr) {

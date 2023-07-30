@@ -24,6 +24,7 @@ export class House extends THREE.Object3D {
                     console.log('cant find mesh by normalLine:', item.name)
                 } else {
                     m.userData.normal = v2
+                    m.userData.isCanShowByOrbit = true
                     this._arrItemsToHideByOrbit.push(m)
                 }
             }
@@ -39,7 +40,6 @@ export class House extends THREE.Object3D {
         })
 
         /** prepare materials for transparent */
-        this._materials = {}
         model.traverse(item => {
             if (item.material) {
                 if (item.material.length) {
@@ -49,7 +49,6 @@ export class House extends THREE.Object3D {
                         mat.opacity = 1
                         item.material = mat
                         item.material.needsUpdate = true
-                        this._materials[item.name + '_n' + i] = mat
                     }
                 }
                 if (!item.material.length) {
@@ -58,7 +57,6 @@ export class House extends THREE.Object3D {
                     mat.opacity = 1
                     item.material = mat
                     item.material.needsUpdate = true
-                    this._materials[item.name] = mat
                 }
             }
         })
@@ -68,32 +66,33 @@ export class House extends THREE.Object3D {
     }
 
     toggleVisible (preName, isView, isAnimate) {
-        let arrMaterialsFiltered = []
-        for (let key in this._materials) {
-            if (key.includes(preName)) {
-                arrMaterialsFiltered.push(this._materials[key])
-            }
-        }
-        let arrItemsFiltered = []
+        const items = []
         this.traverse(item => {
             if (item.name.includes(preName)) {
-                arrItemsFiltered.push(item)
+                items.push(item)
             }
         })
 
+        const setItemsOpacity = (opacity, visible) => {
+            for (let i = 0; i < items.length; ++i) {
+                if (items[i].material.length) {
+                    for (let i = 0; i < items[i].material.length; ++i) {
+                        items[i].material[i].opacity = opacity
+                    }
+                } else {
+                    items[i].material.opacity = opacity
+                }
+                items[i].visible = visible
+                items[i].userData.isCanShowByOrbit = isView
+            }
+        }
+
         if (!isAnimate) {
-            for (let i = 0; i < arrMaterialsFiltered.length; ++i) {
-                arrMaterialsFiltered[i].opacity = isView ? 1 : 0
-            }
-            for (let i = 0; i < arrItemsFiltered.length; ++i) {
-                arrItemsFiltered[i].visible = isView
-            }
+            setItemsOpacity(isView ? 1 : 0, isView)
             return;
         }
 
-        for (let i = 0; i < arrItemsFiltered.length; ++i) {
-            arrItemsFiltered[i].visible = true
-        }
+        setItemsOpacity(1, true)
 
         const data = { phase: 0 }
 
@@ -101,18 +100,14 @@ export class House extends THREE.Object3D {
             .to({ phase: 1 }, 300)
             .onUpdate(() => {
                 const opacity = isView ? data.phase : 1 - data.phase
-                for (let i = 0; i < arrMaterialsFiltered.length; ++i) {
-                    arrMaterialsFiltered[i].opacity = opacity
-                }
+                setItemsOpacity(opacity, true)
             })
             .start()
             .onComplete(() => {
                 if (isView) {
                     return;
                 }
-                for (let i = 0; i < arrItemsFiltered.length; ++i) {
-                    arrItemsFiltered[i].visible = false
-                }
+                setItemsOpacity(0, false)
             })
     }
 
@@ -123,13 +118,28 @@ export class House extends THREE.Object3D {
         const DOT = -10
 
         for (let i = 0; i < this._arrItemsToHideByOrbit.length; ++i) {
+            if (!this._arrItemsToHideByOrbit[i].userData.isCanShowByOrbit) {
+                continue;
+            }
+
             const dot = this._v3.dot(this._arrItemsToHideByOrbit[i].userData.normal)
-            if (dot < DOT && this._arrItemsToHideByOrbit[i].visible) {
+            if (
+                dot < DOT &&
+                this._arrItemsToHideByOrbit[i].visible &&
+                this._arrItemsToHideByOrbit[i].material.opacity &&
+                this._arrItemsToHideByOrbit[i].material.opacity === 1
+            ) {
                 const data = { opacity: 1 }
                 new TWEEN.Tween(data)
-                    .to({ opacity: 0 }, 300)
+                    .to({ opacity: 0 }, 1000)
                     .onUpdate(() => {
-                        this._materials[this._arrItemsToHideByOrbit[i].name].opacity = data.opacity
+                        if (this._arrItemsToHideByOrbit[i].material.length) {
+                            for (let j = 0; j < this._arrItemsToHideByOrbit[i].material.length; ++j) {
+                                this._arrItemsToHideByOrbit[i].material[j].opacity = data.opacity
+                            }
+                        } else {
+                            this._arrItemsToHideByOrbit[i].material.opacity = data.opacity
+                        }
                     })
                     .onComplete(() => {
                         this._arrItemsToHideByOrbit[i].visible = false
@@ -140,9 +150,15 @@ export class House extends THREE.Object3D {
                 this._arrItemsToHideByOrbit[i].visible = true
                 const data = { opacity: 0 }
                 new TWEEN.Tween(data)
-                    .to({ opacity: 1 }, 300)
+                    .to({ opacity: 1 }, 1000)
                     .onUpdate(() => {
-                        this._materials[this._arrItemsToHideByOrbit[i].name].opacity = data.opacity
+                        if (this._arrItemsToHideByOrbit[i].material.length) {
+                            for (let j = 0; j < this._arrItemsToHideByOrbit[i].material.length; ++j) {
+                                this._arrItemsToHideByOrbit[i].material[j].opacity = data.opacity
+                            }
+                        } else {
+                            this._arrItemsToHideByOrbit[i].material.opacity = data.opacity
+                        }
                     })
                     .start()
             }

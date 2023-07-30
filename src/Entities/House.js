@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 
+const TIME_HIDE = 500
+const TIME_HID_BY_ORBIT = 800
+
 
 export class House extends THREE.Object3D {
     constructor(model) {
@@ -97,7 +100,7 @@ export class House extends THREE.Object3D {
         const data = { phase: 0 }
 
         new TWEEN.Tween(data)
-            .to({ phase: 1 }, 300)
+            .to({ phase: 1 }, TIME_HIDE)
             .onUpdate(() => {
                 const opacity = isView ? data.phase : 1 - data.phase
                 setItemsOpacity(opacity, true)
@@ -131,7 +134,7 @@ export class House extends THREE.Object3D {
             ) {
                 const data = { opacity: 1 }
                 new TWEEN.Tween(data)
-                    .to({ opacity: 0 }, 1000)
+                    .to({ opacity: 0 }, TIME_HID_BY_ORBIT)
                     .onUpdate(() => {
                         if (this._arrItemsToHideByOrbit[i].material.length) {
                             for (let j = 0; j < this._arrItemsToHideByOrbit[i].material.length; ++j) {
@@ -146,11 +149,14 @@ export class House extends THREE.Object3D {
                     })
                     .start()
             }
-            if (dot >= DOT && !this._arrItemsToHideByOrbit[i].visible) {
+            if (
+                dot >= DOT &&
+                !this._arrItemsToHideByOrbit[i].visible
+            ) {
                 this._arrItemsToHideByOrbit[i].visible = true
                 const data = { opacity: 0 }
                 new TWEEN.Tween(data)
-                    .to({ opacity: 1 }, 1000)
+                    .to({ opacity: 1 }, TIME_HID_BY_ORBIT)
                     .onUpdate(() => {
                         if (this._arrItemsToHideByOrbit[i].material.length) {
                             for (let j = 0; j < this._arrItemsToHideByOrbit[i].material.length; ++j) {

@@ -14,3 +14,4 @@ export const moveObject1ToPos = (mesh, [x, y, z]) => {
         })
         .start()
 }
+

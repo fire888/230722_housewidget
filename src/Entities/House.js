@@ -43,19 +43,31 @@ export class House extends THREE.Object3D {
     }
 
     toggleVisible (preName, isView, isAnimate) {
-        if (isView) {
-            this.traverse(item => {
-                if (item.name.includes(preName)) {
-                    item.visible = true
-                }
-            })
-        }
-
         let arrMaterialsFiltered = []
         for (let key in this._materials) {
             if (key.includes(preName)) {
                 arrMaterialsFiltered.push(this._materials[key])
             }
+        }
+        let arrItemsFiltered = []
+        this.traverse(item => {
+            if (item.name.includes(preName)) {
+                arrItemsFiltered.push(item)
+            }
+        })
+
+        if (!isAnimate) {
+            for (let i = 0; i < arrMaterialsFiltered.length; ++i) {
+                arrMaterialsFiltered[i].opacity = isView ? 1 : 0
+            }
+            for (let i = 0; i < arrItemsFiltered.length; ++i) {
+                arrItemsFiltered[i].visible = isView
+            }
+            return;
+        }
+
+        for (let i = 0; i < arrItemsFiltered.length; ++i) {
+            arrItemsFiltered[i].visible = true
         }
 
         const data = { phase: 0 }
@@ -65,6 +77,9 @@ export class House extends THREE.Object3D {
             .onUpdate(() => {
                 const opacity = isView ? data.phase : 1 - data.phase
                 for (let i = 0; i < arrMaterialsFiltered.length; ++i) {
+                    // if (arrMaterialsFiltered[i].opacity  === isView ? 1 : 0) {
+                    //     continue;
+                    // }
                     arrMaterialsFiltered[i].opacity = opacity
                 }
             })
@@ -73,11 +88,9 @@ export class House extends THREE.Object3D {
                 if (isView) {
                     return;
                 }
-                this.traverse(item => {
-                    if (item.name.includes(preName)) {
-                        item.visible = false
-                    }
-                })
+                for (let i = 0; i < arrItemsFiltered.length; ++i) {
+                    arrItemsFiltered[i].visible = false
+                }
             })
     }
 }

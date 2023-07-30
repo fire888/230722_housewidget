@@ -19,12 +19,12 @@ async function runApplication () {
     const land = new Land()
     studio.addToScene(land)
 
-    const cameraOrbit = new CameraOrbit(studio.renderer)
     const walkObject = new WalkObject()
+    walkObject.setMeshesToWalk(house.arrMeshesToWalk)
     studio.addToScene(walkObject.label)
     studio.addToScene(walkObject)
-    walkObject.setMeshesToWalk(house.arrMeshesToWalk)
 
+    const cameraOrbit = new CameraOrbit(studio.renderer)
     let currentCamera = 'orbit'
     studio.setCamera(cameraOrbit)
 
@@ -47,51 +47,38 @@ async function runApplication () {
     ui.createButton(
         'этаж 1',
         () => {
+            cameraOrbit.flyToFloorView('1_')
             ui.clearButtonsToggled(['этаж 2'])
             house.toggleVisible('1_', true)
             house.toggleVisible('2_', false, true)
             house.toggleVisible('3_', false, true)
         },
         () => {
+            cameraOrbit.flyToFloorView('fullHouse')
             ui.clearButtonsToggled(['этаж 2'])
             house.toggleVisible('1_', true)
-            house.toggleVisible('2_', true)
-            house.toggleVisible('3_', true)
+            house.toggleVisible('2_', true, true)
+            house.toggleVisible('3_', true, true)
         },
     )
 
     ui.createButton(
         'этаж 2',
         () => {
+            cameraOrbit.flyToFloorView('2_')
             ui.clearButtonsToggled(['этаж 1'])
             house.toggleVisible('1_', false, true)
             house.toggleVisible('2_', true)
             house.toggleVisible('3_', false, true)
         },
         () => {
+            cameraOrbit.flyToFloorView('fullHouse')
             ui.clearButtonsToggled(['этаж 1'])
-            house.toggleVisible('1_', true)
+            house.toggleVisible('1_', true, true)
             house.toggleVisible('2_', true)
-            house.toggleVisible('3_', true)
+            house.toggleVisible('3_', true, true)
         },
     )
-
-
-    // ui.setOnClick('2-й этаж', button => {
-    //     ui.clear()
-    //     if (isShowSecondFloor) {
-    //         house.toggleVisible('1_', true)
-    //         house.toggleVisible('2_', true)
-    //         house.toggleVisible('3_', true)
-    //     } else {
-    //         button.style.backgroundColor = '#FFFF00'
-    //         isShowFirstFloor = false
-    //         house.toggleVisible('1_', false)
-    //         house.toggleVisible('2_', true)
-    //         house.toggleVisible('3_', false)
-    //     }
-    //     isShowSecondFloor = !isShowSecondFloor
-    // })
 
     const animate = () => {
         requestAnimationFrame( animate )
@@ -100,7 +87,6 @@ async function runApplication () {
         studio.render()
     }
     animate()
-
 
     const onWindowResize = () => {
         studio.resize()

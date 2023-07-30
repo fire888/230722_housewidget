@@ -22,16 +22,16 @@ export class WalkObject extends THREE.Object3D {
         let savedRotationX = 0
 
         const panCamera = (clientX, clientY) => {
-            this.label.visible = false
             this.rotation.y = savedRotationY + (savedMousePos.x - clientX) * SPEED_PAN
             const rotX = savedRotationX + (savedMousePos.y - clientY) * SPEED_PAN
             this.camera.rotation.x = Math.min(CAM_MAX_ROT_X, Math.max(CAM_MIN_ROT_X, rotX))
         }
 
         this.isActive = false // disable || enable walk
-        let isMouseDowned = false // is can pan
+        let isPointerMoved = false // disable player move to final point in phones
+        let isMouseDowned = false // disable player move to final point in desktop
 
-        const onMouseDown = event => {
+        window.addEventListener('pointerdown', event => {
             if (!this.isActive) {
                 return;
             }
@@ -40,34 +40,43 @@ export class WalkObject extends THREE.Object3D {
             savedMousePos.y = event.clientY
             savedRotationY = this.rotation.y
             savedRotationX = this.camera.rotation.x
-        }
-        window.addEventListener('mousedown', onMouseDown, false)
+        }, false)
 
-        const onMouseMove = (event) => {
+        window.addEventListener( 'pointermove', event => {
             if (!this.isActive) {
                 return;
             }
-            if (isMouseDowned) {
-                this.label.visible = false
-                panCamera(event.clientX, event.clientY)
-            } else {
-                this.label.move(event.clientX, event.clientY)
+            if (!isMouseDowned) {
+                return;
             }
-        }
-        window.addEventListener( 'mousemove', onMouseMove, false )
+            isPointerMoved = true
+            panCamera(event.clientX, event.clientY)
+        })
 
-
-        const onMouseUp = () => {
+        window.addEventListener('pointerup', event => {
             if (!this.isActive) {
                 return;
             }
             isMouseDowned = false
-            if (!this.label.visible) {
+            if (isPointerMoved) {
+                isPointerMoved = false
                 return;
             }
+            this.label.move(event.clientX, event.clientY)
+            this.label.visible = true
             moveObject1ToPos(this, [this.label.position.x, this.label.position.y + PLAYER_HEIGHT, this.label.position.z])
-        }
-        window.addEventListener('mouseup', onMouseUp, false)
+        })
+
+        window.addEventListener('mousemove', event => {
+            if (!this.isActive) {
+                return;
+            }
+            if (isMouseDowned) {
+                return;
+            }
+            this.label.move(event.clientX, event.clientY)
+            this.label.visible = true
+        })
     }
 
     setMeshesToWalk (arr) {

@@ -5,6 +5,7 @@ export class Label extends THREE.Object3D {
         super()
         this.visible = false
 
+        this.camera = null
         this.arrMeshesToWalk = []
 
         this._raycaster = new THREE.Raycaster()
@@ -15,8 +16,6 @@ export class Label extends THREE.Object3D {
         )
         this._coneMesh.rotation.x = Math.PI / 2
         this.add(this._coneMesh)
-
-        this.camera = null
     }
 
     move (clientX, clientY) {

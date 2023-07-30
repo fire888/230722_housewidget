@@ -2,7 +2,6 @@ import * as THREE from 'three'
 import { Label } from "./Label"
 import { moveObject1ToPos } from "../helpers/helpers3D"
 
-
 const SPEED_PAN = 0.005
 const CAM_MAX_ROT_X = 0.835
 const CAM_MIN_ROT_X = -1.04
@@ -28,14 +27,14 @@ export class WalkObject extends THREE.Object3D {
         }
 
         this._isActive = false // disable || enable walk
-        let isPointerMoved = false // disable player move to final point in phones if panStarted
-        let isMouseDowned = false // disable pan if mouse not downed
+        let isPointerMoved = false // disable player move to final point in phones if pan started
+        let isPointerDowned = false // disable pan if mouse not downed
 
         window.addEventListener('pointerdown', event => {
             if (!this._isActive) {
                 return;
             }
-            isMouseDowned = true
+            isPointerDowned = true
             savedMousePos.x = event.clientX
             savedMousePos.y = event.clientY
             savedRotationY = this.rotation.y
@@ -46,35 +45,34 @@ export class WalkObject extends THREE.Object3D {
             if (!this._isActive) {
                 return;
             }
-            if (!isMouseDowned) {
-                return;
+            if (isPointerDowned) {
+                isPointerMoved = true
+                panCamera(event.clientX, event.clientY)
             }
-            isPointerMoved = true
-            panCamera(event.clientX, event.clientY)
-        })
-
-        window.addEventListener('pointerup', event => {
-            if (!this._isActive) {
-                return;
-            }
-            isMouseDowned = false
-            if (isPointerMoved) {
-                isPointerMoved = false
-                return;
-            }
-            this.label.move(event.clientX, event.clientY)
-            moveObject1ToPos(this, [this.label.position.x, this.label.position.y + PLAYER_HEIGHT, this.label.position.z])
         })
 
         window.addEventListener('mousemove', event => {
             if (!this._isActive) {
                 return;
             }
-            if (isMouseDowned) {
+            if (!isPointerDowned) {
+                this.label.move(event.clientX, event.clientY)
+            }
+        })
+
+        window.addEventListener('pointerup', event => {
+            if (!this._isActive) {
                 return;
             }
-            this.label.move(event.clientX, event.clientY)
+            isPointerDowned = false
+            if (!isPointerMoved) {
+                this.label.move(event.clientX, event.clientY)
+                moveObject1ToPos(this, [this.label.position.x, this.label.position.y + PLAYER_HEIGHT, this.label.position.z])
+            }
+            isPointerMoved = false
         })
+
+
     }
 
     toggleActive (is) {

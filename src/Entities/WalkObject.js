@@ -71,8 +71,6 @@ export class WalkObject extends THREE.Object3D {
             }
             isPointerMoved = false
         })
-
-
     }
 
     toggleActive (is) {

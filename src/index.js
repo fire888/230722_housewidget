@@ -25,22 +25,25 @@ async function runApplication () {
     studio.addToScene(walkObject)
 
     const cameraOrbit = new CameraOrbit(studio.renderer)
-    let currentCamera = 'orbit'
     studio.setCamera(cameraOrbit)
 
     const ui = createUi()
 
+    let timer = null
     ui.createButton(
         'walk',
         () => {
-            studio.setCamera(walkObject.camera)
-            walkObject.toggleActive(true)
-            currentCamera = 'walk'
+            cameraOrbit.flyToObject(walkObject.camera, walkObject.camera.fov)
+            timer = setTimeout(() => {
+                studio.setCamera(walkObject.camera)
+                walkObject.toggleActive(true)
+            }, 1000)
         },
         () => {
-            studio.setCamera(cameraOrbit)
+            clearTimeout(timer)
             walkObject.toggleActive(false)
-            currentCamera = 'orbit'
+            studio.setCamera(cameraOrbit)
+            cameraOrbit.flyFromObjectToSavedPos(walkObject.camera)
         }
     )
 

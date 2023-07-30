@@ -4,13 +4,16 @@ import * as TWEEN from '@tweenjs/tween.js'
 
 export const FLOOR_VIEWS = {
     'fullHouse': {
-        camPos: [4.024487155079189,12.883812901297985,7.495981733166685], targetPos: [0.7451711650976472,-0.004245794279778661,-7.498484902802483],
+        camPos: [10.379738891322047,10.771231202425867,6.478077255964495],
+        targetPos: [-0.4349661217133709,-0.12003423123267605,-6.410386296166905]
     },
     '1_': {
-        camPos: [3.467508371002247,12.876034389806387,5.45479577035581], targetPos: [0.2196469198074736,-1.4099869843544313,-6.706051827195408],
+        camPos: [3.467508371002247,12.876034389806387,5.45479577035581],
+        targetPos: [0.2196469198074736,-1.4099869843544313,-6.706051827195408],
     },
     '2_': {
-        camPos: [3.622523568601783,14.9136519145966,5.092977680390664], targetPos: [0.8358011749270896,0.04990622798469363,-8.059711872104655],
+        camPos: [3.622523568601783,14.9136519145966,5.092977680390664],
+        targetPos: [0.8358011749270896,0.04990622798469363,-8.059711872104655],
     },
 }
 
@@ -19,7 +22,7 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
     constructor (renderer) {
         super(45, window.innerWidth / window.innerHeight, 0.01, 100000)
 
-        this.position.set(0, 1.7, 10)
+        this.position.set(...FLOOR_VIEWS['fullHouse'].camPos)
         if (!renderer) {
             console.log('!!!: no renderer for orbitControls')
         }
@@ -27,15 +30,17 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
         this._controls.minDistance = 0
         this._controls.maxDistance = 200
         this._controls.zoomSpeed = 1
-        this._controls.target.set(0, 3, -10)
+        this._controls.target.set(...FLOOR_VIEWS['fullHouse'].targetPos)
         this._controls.update()
 
+        this._savedCamPos = null
+        this._savedTargetPos = null
 
-        // document.addEventListener("keydown", (event) => {
-        //     if (event.code === 'KeyX') {
-        //         console.log(`camPos: [${this.position.toArray()}], targetPos: [${this._controls.target.toArray()}]`)
-        //     }
-        // });
+        document.addEventListener("keydown", (event) => {
+            if (event.code === 'KeyX') {
+                console.log(`camPos: [${this.position.toArray()}], targetPos: [${this._controls.target.toArray()}]`)
+            }
+        });
     }
 
     update() {
@@ -46,20 +51,62 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
         if (!FLOOR_VIEWS[key]) {
             console.log('no view key:', key)
         }
+        this._flyTo(FLOOR_VIEWS[key].camPos, FLOOR_VIEWS[key].targetPos)
+    }
 
+    flyToObject (obj, fov) {
+        this._savedCamPos = this.position.toArray()
+        this._savedTargetPos = this._controls.target.toArray()
+
+        const obj3D = new THREE.Object3D()
+        const v = new THREE.Vector3()
+        const q = new THREE.Quaternion()
+
+        obj.getWorldPosition(v)
+        obj.getWorldQuaternion(q)
+
+        obj3D.position.copy(v)
+        obj3D.quaternion.copy(q)
+        obj3D.translateZ(-5)
+
+        const targetPos = obj3D.position.toArray()
+        const camPos = v.toArray()
+
+        this._flyTo(camPos, targetPos, fov)
+    }
+
+    flyFromObjectToSavedPos (obj) {
+        const obj3D = new THREE.Object3D()
+        const v3 = new THREE.Vector3()
+        const q = new THREE.Quaternion()
+
+        obj.getWorldPosition(v3)
+        obj.getWorldQuaternion(q)
+
+        this.position.copy(v3)
+        obj3D.position.copy(v3)
+        obj3D.quaternion.copy(q)
+        obj3D.translateZ(-5)
+        this._controls.target.copy(obj3D.position)
+        this._controls.update()
+
+        this._flyTo(this._savedCamPos, this._savedTargetPos)
+    }
+
+    _flyTo (camPos, targetPos, fov = 45) {
         const data = {
             camPos: this.position.toArray(),
             targetPos: this._controls.target.toArray(),
+            fov: this.fov,
         }
 
         new TWEEN.Tween(data)
-            .to({
-                camPos: FLOOR_VIEWS[key].camPos,
-                targetPos: FLOOR_VIEWS[key].targetPos
-            }, 500)
+            .to({ camPos, targetPos, fov,}, 1000)
             .onUpdate(() => {
                 this.position.fromArray(data.camPos)
                 this._controls.target.fromArray(data.targetPos)
+                this.fov = data.fov
+                this.updateProjectionMatrix()
             })
             .onComplete(() => {
                 this._controls.update()

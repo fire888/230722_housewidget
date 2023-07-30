@@ -86,7 +86,10 @@ async function runApplication () {
     const animate = () => {
         requestAnimationFrame( animate )
         TWEEN.update()
-        cameraOrbit.update()
+        if (!walkObject.isActive) {
+            cameraOrbit.update()
+            house.setVisibleWallsByVector(cameraOrbit.position, cameraOrbit.target)
+        }
         studio.render()
     }
     animate()

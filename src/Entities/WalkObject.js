@@ -26,12 +26,12 @@ export class WalkObject extends THREE.Object3D {
             this.camera.rotation.x = Math.min(CAM_MAX_ROT_X, Math.max(CAM_MIN_ROT_X, rotX))
         }
 
-        this._isActive = false // disable || enable walk
+        this.isActive = false // disable || enable walk
         let isPointerMoved = false // disable player move to final point in phones if pan started
         let isPointerDowned = false // disable pan if mouse not downed
 
         window.addEventListener('pointerdown', event => {
-            if (!this._isActive) {
+            if (!this.isActive) {
                 return;
             }
             isPointerDowned = true
@@ -42,7 +42,7 @@ export class WalkObject extends THREE.Object3D {
         }, false)
 
         window.addEventListener( 'pointermove', event => {
-            if (!this._isActive) {
+            if (!this.isActive) {
                 return;
             }
             if (isPointerDowned) {
@@ -52,7 +52,7 @@ export class WalkObject extends THREE.Object3D {
         })
 
         window.addEventListener('mousemove', event => {
-            if (!this._isActive) {
+            if (!this.isActive) {
                 return;
             }
             if (!isPointerDowned) {
@@ -61,7 +61,7 @@ export class WalkObject extends THREE.Object3D {
         })
 
         window.addEventListener('pointerup', event => {
-            if (!this._isActive) {
+            if (!this.isActive) {
                 return;
             }
             isPointerDowned = false
@@ -75,7 +75,7 @@ export class WalkObject extends THREE.Object3D {
 
     toggleActive (is) {
         this.label.visible = false
-        this._isActive = is
+        this.isActive = is
     }
 
     setMeshesToWalk (arr) {

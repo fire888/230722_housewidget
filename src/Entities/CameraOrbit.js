@@ -17,7 +17,6 @@ export const FLOOR_VIEWS = {
     },
 }
 
-
 export class CameraOrbit extends THREE.PerspectiveCamera {
     constructor (renderer) {
         super(45, window.innerWidth / window.innerHeight, 0.01, 100000)
@@ -29,9 +28,11 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
         this._controls = new OrbitControls(this, renderer.domElement)
         this._controls.minDistance = 0
         this._controls.maxDistance = 200
+        this._controls.maxPolarAngle = Math.PI / 2 - 0.01
         this._controls.zoomSpeed = 1
         this._controls.target.set(...FLOOR_VIEWS['fullHouse'].targetPos)
         this._controls.update()
+        this.target = this._controls.target
 
         this._savedCamPos = null
         this._savedTargetPos = null
@@ -43,7 +44,7 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
         });
     }
 
-    update() {
+    update () {
         this._controls.update()
     }
 
@@ -87,8 +88,7 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
         obj3D.position.copy(v3)
         obj3D.quaternion.copy(q)
         obj3D.translateZ(-5)
-        this._controls.target.copy(obj3D.position)
-        this._controls.update()
+        this.target.copy(obj3D.position)
 
         this._flyTo(this._savedCamPos, this._savedTargetPos)
     }
@@ -104,12 +104,9 @@ export class CameraOrbit extends THREE.PerspectiveCamera {
             .to({ camPos, targetPos, fov,}, 1000)
             .onUpdate(() => {
                 this.position.fromArray(data.camPos)
-                this._controls.target.fromArray(data.targetPos)
+                this.target.fromArray(data.targetPos)
                 this.fov = data.fov
                 this.updateProjectionMatrix()
-            })
-            .onComplete(() => {
-                this._controls.update()
             })
             .start()
     }

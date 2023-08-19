@@ -2,7 +2,13 @@ import * as THREE from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 
 const TIME_HIDE = 500
-const MIN_OPACITY = .5
+
+
+export const PARAMS_OPACITY = {
+    'min_opacity': 0,
+    'min_angle': .2,
+    'max_angle': .5,
+}
 
 
 export class House extends THREE.Object3D {
@@ -22,7 +28,6 @@ export class House extends THREE.Object3D {
                 const v2 = new THREE.Vector3(array[3], array[4], array[5])
                 const v1 = new THREE.Vector3(array[0], array[1],array[2])
                 v2.sub(v1).normalize().applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
-                console.log(key)
                 const m = model.getObjectByName(key)
                 if (!m) {
                     console.log('cant find mesh by normalLine:', item.name)
@@ -125,9 +130,16 @@ export class House extends THREE.Object3D {
             }
 
             const dot = this._v3.dot(this._arrItemsToHideByOrbit[i].userData.normal)
+            const alpha90 = (1 + dot / 20)
+            const DIFF = 1 / (PARAMS_OPACITY.max_angle - PARAMS_OPACITY.min_angle)
+            const alpha = -PARAMS_OPACITY.min_angle + DIFF * alpha90
+            const clampedAlpha = Math.max(PARAMS_OPACITY.min_opacity, alpha)
 
-            const alpha = Math.max(MIN_OPACITY, (dot + 17) / 5)
-            this._arrItemsToHideByOrbit[i].material.opacity = alpha
+            if (this._arrItemsToHideByOrbit[i].name === '1_007') {
+                console.log(dot)
+            }
+
+            this._arrItemsToHideByOrbit[i].material.opacity = clampedAlpha
         }
     }
 }

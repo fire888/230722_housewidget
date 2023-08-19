@@ -1,12 +1,13 @@
 import { ASSETS } from './constants/ASSETS'
 import { createStudio } from './Entities/Studio'
 import { loadAssets } from './helpers/loadAssets'
-import { House } from "./Entities/House"
+import { House, PARAMS_OPACITY } from "./Entities/House"
 import { Land } from "./Entities/Land"
 import { CameraOrbit } from "./Entities/CameraOrbit"
 import { WalkObject } from "./Entities/WalkObject"
 import { createUi } from "./ui/ui"
 import * as TWEEN from "@tweenjs/tween.js"
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
 
 async function runApplication () {
@@ -82,6 +83,33 @@ async function runApplication () {
             house.toggleVisible('3_', true, true)
         },
     )
+
+    const gui = new GUI()
+    console.log(gui)
+    gui.domElement.style.left = '0'
+
+    gui.add(PARAMS_OPACITY, 'min_opacity')
+        .min(0)
+        .max(1)
+        .onChange(v => {
+            PARAMS_OPACITY.min_opacity = v
+        })
+        .listen()
+    gui.add(PARAMS_OPACITY, 'min_angle')
+        .min(0)
+        .max(1)
+        .onChange(v => {
+            PARAMS_OPACITY.min_angle = v
+        })
+        .listen()
+    gui.add(PARAMS_OPACITY, 'max_angle')
+        .min(0)
+        .max(1)
+        .onChange(v => {
+            PARAMS_OPACITY.max_angle = v
+        })
+        .listen()
+
 
     const animate = () => {
         requestAnimationFrame( animate )

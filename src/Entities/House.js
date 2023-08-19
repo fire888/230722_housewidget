@@ -96,9 +96,6 @@ export class House extends THREE.Object3D {
         this._v3 = new THREE.Vector3()
         this._v3LineCam = new THREE.Vector3()
         this._line3 = new THREE.Line3()
-
-        this._v3Zero = new THREE.Vector3()
-        this._v3ZeroTop = new THREE.Vector3(0, 500, 0)
     }
 
     toggleVisible (preName, isView, isAnimate) {

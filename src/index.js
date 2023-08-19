@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import { ASSETS } from './constants/ASSETS'
 import { createStudio } from './Entities/Studio'
 import { loadAssets } from './helpers/loadAssets'

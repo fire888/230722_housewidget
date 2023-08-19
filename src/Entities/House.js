@@ -4,6 +4,8 @@ import * as TWEEN from '@tweenjs/tween.js'
 const TIME_HIDE = 500
 const hPI = Math.PI / 2
 
+const SUFFIX_MESHES_NAMES = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5']
+
 export const PARAMS_OPACITY = {
     'min_opacity': 0,
     'min_angle': .2,
@@ -35,6 +37,17 @@ export class House extends THREE.Object3D {
                     m.userData.normal = v2
                     m.userData.isCanShowByOrbit = true
                     this._arrItemsToHideByOrbit.push(m)
+                }
+                for (let i = 0; i < SUFFIX_MESHES_NAMES.length; ++i) {
+                    const keyS = key + SUFFIX_MESHES_NAMES[i]
+                    const m = model.getObjectByName(keyS)
+                    if (!m) {
+                        console.log('cant find mesh by normalLine:', item.name)
+                    } else {
+                        m.userData.normal = v2
+                        m.userData.isCanShowByOrbit = true
+                        this._arrItemsToHideByOrbit.push(m)
+                    }
                 }
             }
         })
@@ -141,7 +154,7 @@ export class House extends THREE.Object3D {
             const a = 1 - (angle - hPI) / hPI
             const aP = -PARAMS_OPACITY.min_angle + a * (1 / (PARAMS_OPACITY.max_angle - PARAMS_OPACITY.min_angle))
 
-            mesh.material.opacity = aP
+            mesh.material.opacity = Math.max(PARAMS_OPACITY.min_opacity, aP)
 
 
             // if (this._arrItemsToHideByOrbit[i].name === '1_007') {

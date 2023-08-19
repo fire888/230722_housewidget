@@ -16,10 +16,6 @@ export const PARAMS_OPACITY = {
     'max_dist': 7,
 }
 
-
-let is = false
-
-
 export class House extends THREE.Object3D {
     constructor(model) {
         super()
@@ -194,15 +190,6 @@ export class House extends THREE.Object3D {
             if (PARAMS_OPACITY.hide_walls_by_angle && !PARAMS_OPACITY.hide_walls_by_scroll) {
                 mesh.material.opacity = alphaAngle
             }
-
-
-            //if (this._arrItemsToHideByOrbit[i].name === '1_007x0') {
-            //    if (!is) {
-            //        is = true
-                    //console.log(d)
-            //    }
-
-            //}
         }
     }
 

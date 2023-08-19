@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 
 const TIME_HIDE = 500
-const TIME_HID_BY_ORBIT = 800
+const MIN_OPACITY = .5
 
 
 export class House extends THREE.Object3D {
@@ -22,6 +22,7 @@ export class House extends THREE.Object3D {
                 const v2 = new THREE.Vector3(array[3], array[4], array[5])
                 const v1 = new THREE.Vector3(array[0], array[1],array[2])
                 v2.sub(v1).normalize().applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+                console.log(key)
                 const m = model.getObjectByName(key)
                 if (!m) {
                     console.log('cant find mesh by normalLine:', item.name)
@@ -118,56 +119,15 @@ export class House extends THREE.Object3D {
         this._v3.copy(camTargetPos)
         this._v3.sub(camPos)
 
-        const DOT = -10
-
         for (let i = 0; i < this._arrItemsToHideByOrbit.length; ++i) {
             if (!this._arrItemsToHideByOrbit[i].userData.isCanShowByOrbit) {
                 continue;
             }
 
             const dot = this._v3.dot(this._arrItemsToHideByOrbit[i].userData.normal)
-            if (
-                dot < DOT &&
-                this._arrItemsToHideByOrbit[i].visible &&
-                this._arrItemsToHideByOrbit[i].material.opacity &&
-                this._arrItemsToHideByOrbit[i].material.opacity === 1
-            ) {
-                const data = { opacity: 1 }
-                new TWEEN.Tween(data)
-                    .to({ opacity: 0 }, TIME_HID_BY_ORBIT)
-                    .onUpdate(() => {
-                        if (this._arrItemsToHideByOrbit[i].material.length) {
-                            for (let j = 0; j < this._arrItemsToHideByOrbit[i].material.length; ++j) {
-                                this._arrItemsToHideByOrbit[i].material[j].opacity = data.opacity
-                            }
-                        } else {
-                            this._arrItemsToHideByOrbit[i].material.opacity = data.opacity
-                        }
-                    })
-                    .onComplete(() => {
-                        this._arrItemsToHideByOrbit[i].visible = false
-                    })
-                    .start()
-            }
-            if (
-                dot >= DOT &&
-                !this._arrItemsToHideByOrbit[i].visible
-            ) {
-                this._arrItemsToHideByOrbit[i].visible = true
-                const data = { opacity: 0 }
-                new TWEEN.Tween(data)
-                    .to({ opacity: 1 }, TIME_HID_BY_ORBIT)
-                    .onUpdate(() => {
-                        if (this._arrItemsToHideByOrbit[i].material.length) {
-                            for (let j = 0; j < this._arrItemsToHideByOrbit[i].material.length; ++j) {
-                                this._arrItemsToHideByOrbit[i].material[j].opacity = data.opacity
-                            }
-                        } else {
-                            this._arrItemsToHideByOrbit[i].material.opacity = data.opacity
-                        }
-                    })
-                    .start()
-            }
+
+            const alpha = Math.max(MIN_OPACITY, (dot + 17) / 5)
+            this._arrItemsToHideByOrbit[i].material.opacity = alpha
         }
     }
 }

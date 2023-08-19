@@ -99,6 +99,9 @@ async function runApplication () {
         .min(0)
         .max(1)
         .onChange(v => {
+            if (PARAMS_OPACITY.max_angle < v) {
+                PARAMS_OPACITY.max_angle = v
+            }
             PARAMS_OPACITY.min_angle = v
         })
         .listen()
@@ -106,6 +109,9 @@ async function runApplication () {
         .min(0)
         .max(1)
         .onChange(v => {
+            if (PARAMS_OPACITY.min_angle > v) {
+                PARAMS_OPACITY.min_angle = v
+            }
             PARAMS_OPACITY.max_angle = v
         })
         .listen()

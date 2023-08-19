@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 
 const TIME_HIDE = 500
-
+const hPI = Math.PI / 2
 
 export const PARAMS_OPACITY = {
     'min_opacity': 0,
@@ -129,17 +129,24 @@ export class House extends THREE.Object3D {
                 continue;
             }
 
-            const dot = this._v3.dot(this._arrItemsToHideByOrbit[i].userData.normal)
-            const alpha90 = (1 + dot / 20)
-            const DIFF = 1 / (PARAMS_OPACITY.max_angle - PARAMS_OPACITY.min_angle)
-            const alpha = -PARAMS_OPACITY.min_angle + DIFF * alpha90
-            const clampedAlpha = Math.max(PARAMS_OPACITY.min_opacity, alpha)
+            const mesh = this._arrItemsToHideByOrbit[i]
 
-            if (this._arrItemsToHideByOrbit[i].name === '1_007') {
-                console.log(dot)
+            const angle = this._v3.angleTo(mesh.userData.normal)
+
+            if (angle < Math.PI / 2) {
+                mesh.material.opacity = 1
+                continue;
             }
 
-            this._arrItemsToHideByOrbit[i].material.opacity = clampedAlpha
+            const a = 1 - (angle - hPI) / hPI
+            const aP = -PARAMS_OPACITY.min_angle + a * (1 / (PARAMS_OPACITY.max_angle - PARAMS_OPACITY.min_angle))
+
+            mesh.material.opacity = aP
+
+
+            // if (this._arrItemsToHideByOrbit[i].name === '1_007') {
+            //     console.log(angle)
+            // }
         }
     }
 }

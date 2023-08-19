@@ -7,10 +7,17 @@ const hPI = Math.PI / 2
 const SUFFIX_MESHES_NAMES = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5']
 
 export const PARAMS_OPACITY = {
+    'hide_walls_by_angle': true,
     'min_opacity': 0,
     'min_angle': .2,
     'max_angle': .5,
+    'hide_walls_by_scroll': true,
+    'min_dist': 0,
+    'max_dist': 7,
 }
+
+
+let is = false
 
 
 export class House extends THREE.Object3D {
@@ -27,14 +34,15 @@ export class House extends THREE.Object3D {
                 const params = data[1].split('n')
                 const key = params[0] + '_' + params[1]
                 const { array } = item.geometry.attributes.position
-                const v2 = new THREE.Vector3(array[3], array[4], array[5])
-                const v1 = new THREE.Vector3(array[0], array[1],array[2])
-                v2.sub(v1).normalize().applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+                const v1 = new THREE.Vector3(array[0], array[1], array[2]).applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+                const v2 = new THREE.Vector3(array[3], array[4], array[5]).applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+                v2.sub(v1).normalize()
                 const m = model.getObjectByName(key)
                 if (!m) {
-                    console.log('cant find mesh by normalLine:', item.name)
+                   // console.log('cant find mesh by normalLine:', item.name, key)
                 } else {
                     m.userData.normal = v2
+                    m.userData.positionNormal = v1
                     m.userData.isCanShowByOrbit = true
                     this._arrItemsToHideByOrbit.push(m)
                 }
@@ -42,9 +50,10 @@ export class House extends THREE.Object3D {
                     const keyS = key + SUFFIX_MESHES_NAMES[i]
                     const m = model.getObjectByName(keyS)
                     if (!m) {
-                        console.log('cant find mesh by normalLine:', item.name)
+                       // console.log('cant find mesh by normalLine:', item.name, keyS)
                     } else {
                         m.userData.normal = v2
+                        m.userData.positionNormal = v1
                         m.userData.isCanShowByOrbit = true
                         this._arrItemsToHideByOrbit.push(m)
                     }
@@ -85,6 +94,11 @@ export class House extends THREE.Object3D {
 
         /** empty vec to calculate */
         this._v3 = new THREE.Vector3()
+        this._v3LineCam = new THREE.Vector3()
+        this._line3 = new THREE.Line3()
+
+        this._v3Zero = new THREE.Vector3()
+        this._v3ZeroTop = new THREE.Vector3(0, 500, 0)
     }
 
     toggleVisible (preName, isView, isAnimate) {
@@ -144,22 +158,64 @@ export class House extends THREE.Object3D {
 
             const mesh = this._arrItemsToHideByOrbit[i]
 
-            const angle = this._v3.angleTo(mesh.userData.normal)
+            let alphaAngle = 0
+            let alphaScroll = 0
 
-            if (angle < Math.PI / 2) {
-                mesh.material.opacity = 1
-                continue;
+            /** update by angle */
+            if (PARAMS_OPACITY.hide_walls_by_angle) {
+                const angle = this._v3.angleTo(mesh.userData.normal)
+                if (angle < Math.PI / 2) {
+                    mesh.material.opacity = 1
+                    continue;
+                }
+                const a = 1 - (angle - hPI) / hPI
+                const aClamped = -PARAMS_OPACITY.min_angle + a * (1 / (PARAMS_OPACITY.max_angle - PARAMS_OPACITY.min_angle))
+                alphaAngle = Math.max(PARAMS_OPACITY.min_opacity, aClamped)
             }
 
-            const a = 1 - (angle - hPI) / hPI
-            const aP = -PARAMS_OPACITY.min_angle + a * (1 / (PARAMS_OPACITY.max_angle - PARAMS_OPACITY.min_angle))
 
-            mesh.material.opacity = Math.max(PARAMS_OPACITY.min_opacity, aP)
+            /** update by scroll */
+            if (PARAMS_OPACITY.hide_walls_by_scroll) {
+                this._line3.start.copy(camPos)
+                this._line3.end.copy(camTargetPos)
+                this._line3.closestPointToPoint(mesh.userData.positionNormal, false, this._v3LineCam)
+                const d = this._v3LineCam.distanceTo(mesh.userData.positionNormal)
+
+                alphaScroll = Math.max(0, d / (PARAMS_OPACITY.max_dist - PARAMS_OPACITY.min_dist) - PARAMS_OPACITY.min_dist)
+            }
 
 
-            // if (this._arrItemsToHideByOrbit[i].name === '1_007') {
-            //     console.log(angle)
-            // }
+
+            if (PARAMS_OPACITY.hide_walls_by_angle && PARAMS_OPACITY.hide_walls_by_scroll) {
+                mesh.material.opacity = Math.max(alphaAngle, alphaScroll)
+            }
+
+            if (!PARAMS_OPACITY.hide_walls_by_angle && PARAMS_OPACITY.hide_walls_by_scroll) {
+                mesh.material.opacity = alphaScroll
+            }
+
+            if (PARAMS_OPACITY.hide_walls_by_angle && !PARAMS_OPACITY.hide_walls_by_scroll) {
+                mesh.material.opacity = alphaAngle
+            }
+
+
+            //if (this._arrItemsToHideByOrbit[i].name === '1_007x0') {
+            //    if (!is) {
+            //        is = true
+                    //console.log(d)
+            //    }
+
+            //}
+        }
+    }
+
+    resetOpacity () {
+        for (let i = 0; i < this._arrItemsToHideByOrbit.length; ++i) {
+            if (!this._arrItemsToHideByOrbit[i].userData.isCanShowByOrbit) {
+                continue;
+            }
+            this._arrItemsToHideByOrbit[i].material.opacity = 1
         }
     }
 }
+

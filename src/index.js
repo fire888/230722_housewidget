@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { ASSETS } from './constants/ASSETS'
 import { createStudio } from './Entities/Studio'
 import { loadAssets } from './helpers/loadAssets'
@@ -85,15 +86,17 @@ async function runApplication () {
     )
 
     const gui = new GUI()
-    console.log(gui)
     gui.domElement.style.left = '0'
+
+    gui.add(PARAMS_OPACITY, 'hide_walls_by_angle')
+        .onChange(() => {
+            house.resetOpacity()
+        })
+        .listen()
 
     gui.add(PARAMS_OPACITY, 'min_opacity')
         .min(0)
         .max(1)
-        .onChange(v => {
-            PARAMS_OPACITY.min_opacity = v
-        })
         .listen()
     gui.add(PARAMS_OPACITY, 'min_angle')
         .min(0)
@@ -102,7 +105,6 @@ async function runApplication () {
             if (PARAMS_OPACITY.max_angle < v) {
                 PARAMS_OPACITY.max_angle = v
             }
-            PARAMS_OPACITY.min_angle = v
         })
         .listen()
     gui.add(PARAMS_OPACITY, 'max_angle')
@@ -112,7 +114,32 @@ async function runApplication () {
             if (PARAMS_OPACITY.min_angle > v) {
                 PARAMS_OPACITY.min_angle = v
             }
-            PARAMS_OPACITY.max_angle = v
+        })
+        .listen()
+
+    gui.add(PARAMS_OPACITY, 'hide_walls_by_scroll')
+        .onChange(() => {
+            house.resetOpacity()
+        })
+        .listen()
+
+    gui.add(PARAMS_OPACITY, 'min_dist')
+        .min(0)
+        .max(15)
+        .onChange(v => {
+            if (PARAMS_OPACITY.max_dist < v) {
+                PARAMS_OPACITY.max_dist = v + 0.01
+            }
+        })
+        .listen()
+
+    gui.add(PARAMS_OPACITY, 'max_dist')
+        .min(0)
+        .max(15)
+        .onChange(v => {
+            if (PARAMS_OPACITY.min_dist > v) {
+                PARAMS_OPACITY.min_dist = v - 0.01
+            }
         })
         .listen()
 

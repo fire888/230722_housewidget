@@ -11,7 +11,7 @@ export const PARAMS_OPACITY = {
     'min_opacity': 0,
     'min_angle': .2,
     'max_angle': .5,
-    'hide_walls_by_scroll': true,
+    'hide_walls_by_scroll': false,
     'min_dist': 0,
     'max_dist': 7,
 }

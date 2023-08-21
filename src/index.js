@@ -38,6 +38,7 @@ async function runApplication () {
             timer = setTimeout(() => {
                 studio.setCamera(walkObject.camera)
                 walkObject.toggleActive(true)
+                house.resetOpacity()
             }, 1000)
         },
         () => {
@@ -92,7 +93,6 @@ async function runApplication () {
             house.resetOpacity()
         })
         .listen()
-
     gui.add(PARAMS_OPACITY, 'min_opacity')
         .min(0)
         .max(1)
@@ -115,13 +115,11 @@ async function runApplication () {
             }
         })
         .listen()
-
     gui.add(PARAMS_OPACITY, 'hide_walls_by_scroll')
         .onChange(() => {
             house.resetOpacity()
         })
         .listen()
-
     gui.add(PARAMS_OPACITY, 'min_dist')
         .min(0)
         .max(15)
@@ -131,7 +129,6 @@ async function runApplication () {
             }
         })
         .listen()
-
     gui.add(PARAMS_OPACITY, 'max_dist')
         .min(0)
         .max(15)

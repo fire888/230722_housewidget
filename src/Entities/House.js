@@ -19,12 +19,12 @@ export const PARAMS_OPACITY = {
 export class House extends THREE.Object3D {
     constructor(model) {
         super()
-        model.rotation.x = -Math.PI / 2
-        this.add(model)
+        //model.rotation.x = -Math.PI / 2
+        this.add(model.scene)
 
         /** find normals for hide walls */
         this._arrItemsToHideByOrbit = []
-        model.traverse(item => {
+        model.scene.traverse(item => {
             if (item.name.includes('lf')) {
                 const data = item.name.split('lf')
                 const params = data[1].split('n')
@@ -59,7 +59,7 @@ export class House extends THREE.Object3D {
 
         /** fill arr hidden meshes for player walk */
         this.arrMeshesToWalk = []
-        model.traverse(item => {
+        model.scene.traverse(item => {
             if (item.name.includes('walk')) {
                 this.arrMeshesToWalk.push(item)
                 item.visible = false
@@ -67,7 +67,7 @@ export class House extends THREE.Object3D {
         })
 
         /** prepare materials for transparent */
-        model.traverse(item => {
+        model.scene.traverse(item => {
             if (item.material) {
                 if (item.material.length) {
                     for (let i = 0; i < item.material.length; ++i) {

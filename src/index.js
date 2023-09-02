@@ -14,7 +14,7 @@ async function runApplication () {
     const studio = createStudio()
     const assets = await loadAssets(ASSETS, () => {})
 
-    const house = new House(assets.house.model)
+    const house = new House(assets.Rizhskiy_s1f2_WB_detachWalls.model)
     studio.addToScene(house)
 
     const land = new Land()

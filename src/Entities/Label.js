@@ -12,7 +12,7 @@ export class Label extends THREE.Object3D {
         this._raycaster = new THREE.Raycaster()
         this._mouse = new THREE.Vector2()
         obj.rotation.x = Math.PI / 2
-        const mat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, emissive: 0xFFFFFF })
+        const mat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF })
         obj.children[0].material = mat
         this.add(obj)
     }

@@ -7,12 +7,15 @@ import { CameraOrbit } from "./Entities/CameraOrbit"
 import { WalkObject } from "./Entities/WalkObject"
 import { createUi } from "./ui/ui"
 import * as TWEEN from "@tweenjs/tween.js"
-import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+//import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
 
 async function runApplication () {
     const studio = createStudio()
     const assets = await loadAssets(ASSETS, () => {})
+
+    const startScreen = document.querySelector('.progress-wrapper')
+    document.body.removeChild(startScreen)
 
     const house = new House(assets.Rizhskiy_s1f2_WB_detachWalls.model)
     studio.addToScene(house)
@@ -88,59 +91,59 @@ async function runApplication () {
     //     },
     // )
 
-    const gui = new GUI()
-    gui.domElement.style.left = '0'
-
-    gui.add(PARAMS_OPACITY, 'hide_walls_by_angle')
-        .onChange(() => {
-            house.resetOpacity()
-        })
-        .listen()
-    gui.add(PARAMS_OPACITY, 'min_opacity')
-        .min(0)
-        .max(1)
-        .listen()
-    gui.add(PARAMS_OPACITY, 'min_angle')
-        .min(0)
-        .max(1)
-        .onChange(v => {
-            if (PARAMS_OPACITY.max_angle < v) {
-                PARAMS_OPACITY.max_angle = v
-            }
-        })
-        .listen()
-    gui.add(PARAMS_OPACITY, 'max_angle')
-        .min(0)
-        .max(1)
-        .onChange(v => {
-            if (PARAMS_OPACITY.min_angle > v) {
-                PARAMS_OPACITY.min_angle = v
-            }
-        })
-        .listen()
-    gui.add(PARAMS_OPACITY, 'hide_walls_by_scroll')
-        .onChange(() => {
-            house.resetOpacity()
-        })
-        .listen()
-    gui.add(PARAMS_OPACITY, 'min_dist')
-        .min(0)
-        .max(15)
-        .onChange(v => {
-            if (PARAMS_OPACITY.max_dist < v) {
-                PARAMS_OPACITY.max_dist = v + 0.01
-            }
-        })
-        .listen()
-    gui.add(PARAMS_OPACITY, 'max_dist')
-        .min(0)
-        .max(15)
-        .onChange(v => {
-            if (PARAMS_OPACITY.min_dist > v) {
-                PARAMS_OPACITY.min_dist = v - 0.01
-            }
-        })
-        .listen()
+    // const gui = new GUI()
+    // gui.domElement.style.left = '0'
+    //
+    // gui.add(PARAMS_OPACITY, 'hide_walls_by_angle')
+    //     .onChange(() => {
+    //         house.resetOpacity()
+    //     })
+    //     .listen()
+    // gui.add(PARAMS_OPACITY, 'min_opacity')
+    //     .min(0)
+    //     .max(1)
+    //     .listen()
+    // gui.add(PARAMS_OPACITY, 'min_angle')
+    //     .min(0)
+    //     .max(1)
+    //     .onChange(v => {
+    //         if (PARAMS_OPACITY.max_angle < v) {
+    //             PARAMS_OPACITY.max_angle = v
+    //         }
+    //     })
+    //     .listen()
+    // gui.add(PARAMS_OPACITY, 'max_angle')
+    //     .min(0)
+    //     .max(1)
+    //     .onChange(v => {
+    //         if (PARAMS_OPACITY.min_angle > v) {
+    //             PARAMS_OPACITY.min_angle = v
+    //         }
+    //     })
+    //     .listen()
+    // gui.add(PARAMS_OPACITY, 'hide_walls_by_scroll')
+    //     .onChange(() => {
+    //         house.resetOpacity()
+    //     })
+    //     .listen()
+    // gui.add(PARAMS_OPACITY, 'min_dist')
+    //     .min(0)
+    //     .max(15)
+    //     .onChange(v => {
+    //         if (PARAMS_OPACITY.max_dist < v) {
+    //             PARAMS_OPACITY.max_dist = v + 0.01
+    //         }
+    //     })
+    //     .listen()
+    // gui.add(PARAMS_OPACITY, 'max_dist')
+    //     .min(0)
+    //     .max(15)
+    //     .onChange(v => {
+    //         if (PARAMS_OPACITY.min_dist > v) {
+    //             PARAMS_OPACITY.min_dist = v - 0.01
+    //         }
+    //     })
+    //     .listen()
 
 
     const animate = () => {

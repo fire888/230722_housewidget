@@ -13,7 +13,6 @@ import {
 export class WalkObject extends THREE.Object3D {
     constructor(label) {
         super()
-        console.log(START_WALK_POSITION)
         this.position.set(...START_WALK_POSITION.camPos)
 
         this.camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 100000)

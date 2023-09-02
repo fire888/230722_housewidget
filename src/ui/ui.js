@@ -27,7 +27,7 @@ export const createUi = () => {
             }
             b.addEventListener('click', e => {
                 buttons[key].isToggled = !buttons[key].isToggled
-                b.style.backgroundColor = buttons[key].isToggled ? '#ffff00' : '#ffffff'
+                b.style.backgroundColor = buttons[key].isToggled ? '#b4b4d9' : '#ffffff'
                 buttons[key].isToggled ? fOn() : fOff()
             })
         },

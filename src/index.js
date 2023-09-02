@@ -7,7 +7,7 @@ import { CameraOrbit } from "./Entities/CameraOrbit"
 import { WalkObject } from "./Entities/WalkObject"
 import { createUi } from "./ui/ui"
 import * as TWEEN from "@tweenjs/tween.js"
-//import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
 
 async function runApplication () {

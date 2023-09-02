@@ -19,6 +19,7 @@ const NAMES_TO_HIDE_BY_LINE = {
     'lf1': [
         'Riz_S1F2_Wall_5_1',
         'Riz_S1F2_Wall_5_2',
+        'Riz_S1F2_Wall_5_3_aaa',
         'Riz_S1F2_Wall_5_3',
         'Riz_S1F2_Wall_5_4',
     ],
@@ -38,9 +39,13 @@ const NAMES_TO_HIDE_BY_LINE = {
         'Riz_S1F2_Heat_Radiator_1400x500_2',
     ],
     'lf3': [
-        'Riz_S1F2_Wall_3_1',
+        'Riz_S1F2_Wall_3_1a',
+        'Riz_S1F2_Wall_3_1b',
         'Riz_S1F2_Wall_3_2',
         'Riz_S1F2_Wall_3_3',
+        'Riz_S1F2_Wall_3_3a',
+        'Riz_S1F2_Wall_3_3b',
+        'Riz_S1F2_Wall_3_3d',
         'Riz_S1F2_Wall_3_4',
 
         'Riz_S1F2_Wall_1_1',
@@ -136,7 +141,6 @@ export class House extends THREE.Object3D {
                 }
                 if (!item.material.length) {
                     if (item.material.name === 'Glass_mtl') {
-                        console.log(item.material)
                         item.material.transparent = true
                         item.material.opacity = .1
                         item.material.needsUpdate = true

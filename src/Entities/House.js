@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
+import { WALK, WALK_BLOCK } from '../constants/NAMES'
 
 const TIME_HIDE = 500
 const hPI = Math.PI / 2
@@ -60,7 +61,7 @@ export class House extends THREE.Object3D {
         /** fill arr hidden meshes for player walk */
         this.arrMeshesToWalk = []
         model.scene.traverse(item => {
-            if (item.name.includes('walk')) {
+            if (item.name.includes(WALK)) {
                 this.arrMeshesToWalk.push(item)
                 item.visible = false
             }

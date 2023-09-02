@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { WALK, WALK_BLOCK } from '../constants/NAMES'
 
 export class Label extends THREE.Object3D {
     constructor() {
@@ -31,7 +32,7 @@ export class Label extends THREE.Object3D {
             this.visible = false
             return
         }
-        if (intersects[0].object.name.includes('walkblock')) {
+        if (intersects[0].object.name.includes(WALK_BLOCK)) {
             this.visible = false
             return
         }

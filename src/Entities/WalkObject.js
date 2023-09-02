@@ -11,7 +11,7 @@ import {
 
 
 export class WalkObject extends THREE.Object3D {
-    constructor() {
+    constructor(label) {
         super()
         console.log(START_WALK_POSITION)
         this.position.set(...START_WALK_POSITION.camPos)
@@ -19,7 +19,7 @@ export class WalkObject extends THREE.Object3D {
         this.camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 100000)
 
         this.add(this.camera)
-        this.label = new Label()
+        this.label = new Label(label)
         this.label.camera = this.camera
 
         const savedMousePos = new THREE.Vector2()

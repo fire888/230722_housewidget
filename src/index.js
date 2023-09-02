@@ -16,12 +16,12 @@ async function runApplication () {
 
     const house = new House(assets.Rizhskiy_s1f2_WB_detachWalls.model)
     studio.addToScene(house)
-    house.toggleVisible('Riz_S1F2_Ceiling_All', false)
+    house.toggleVisible('Ceiling', false)
 
     const land = new Land()
     studio.addToScene(land)
 
-    const walkObject = new WalkObject()
+    const walkObject = new WalkObject(assets.label.model)
     walkObject.setMeshesToWalk(house.arrMeshesToWalk)
     studio.addToScene(walkObject)
     studio.addToScene(walkObject.label)
@@ -37,7 +37,7 @@ async function runApplication () {
         () => {
             cameraOrbit.flyToObject(walkObject.camera, walkObject.camera.fov)
             timer = setTimeout(() => {
-                house.toggleVisible('Riz_S1F2_Ceiling_All', true)
+                house.toggleVisible('Ceiling', true)
                 studio.setCamera(walkObject.camera)
                 walkObject.toggleActive(true)
                 house.resetOpacity()
@@ -45,48 +45,48 @@ async function runApplication () {
         },
         () => {
             clearTimeout(timer)
-            house.toggleVisible('Riz_S1F2_Ceiling_All', false)
+            house.toggleVisible('Ceiling', false)
             walkObject.toggleActive(false)
             studio.setCamera(cameraOrbit)
             cameraOrbit.flyFromObjectToSavedPos(walkObject.camera)
         }
     )
 
-    ui.createButton(
-        'этаж 1',
-        () => {
-            cameraOrbit.flyToFloorView('1_')
-            ui.clearButtonsToggled(['этаж 2'])
-            house.toggleVisible('1_', true)
-            house.toggleVisible('2_', false, true)
-            house.toggleVisible('3_', false, true)
-        },
-        () => {
-            cameraOrbit.flyToFloorView('fullHouse')
-            ui.clearButtonsToggled(['этаж 2'])
-            house.toggleVisible('1_', true)
-            house.toggleVisible('2_', true, true)
-            house.toggleVisible('3_', true, true)
-        },
-    )
-
-    ui.createButton(
-        'этаж 2',
-        () => {
-            cameraOrbit.flyToFloorView('2_')
-            ui.clearButtonsToggled(['этаж 1'])
-            house.toggleVisible('1_', false, true)
-            house.toggleVisible('2_', true)
-            house.toggleVisible('3_', false, true)
-        },
-        () => {
-            cameraOrbit.flyToFloorView('fullHouse')
-            ui.clearButtonsToggled(['этаж 1'])
-            house.toggleVisible('1_', true, true)
-            house.toggleVisible('2_', true)
-            house.toggleVisible('3_', true, true)
-        },
-    )
+    // ui.createButton(
+    //     'этаж 1',
+    //     () => {
+    //         cameraOrbit.flyToFloorView('1_')
+    //         ui.clearButtonsToggled(['этаж 2'])
+    //         house.toggleVisible('1_', true)
+    //         house.toggleVisible('2_', false, true)
+    //         house.toggleVisible('3_', false, true)
+    //     },
+    //     () => {
+    //         cameraOrbit.flyToFloorView('fullHouse')
+    //         ui.clearButtonsToggled(['этаж 2'])
+    //         house.toggleVisible('1_', true)
+    //         house.toggleVisible('2_', true, true)
+    //         house.toggleVisible('3_', true, true)
+    //     },
+    // )
+    //
+    // ui.createButton(
+    //     'этаж 2',
+    //     () => {
+    //         cameraOrbit.flyToFloorView('2_')
+    //         ui.clearButtonsToggled(['этаж 1'])
+    //         house.toggleVisible('1_', false, true)
+    //         house.toggleVisible('2_', true)
+    //         house.toggleVisible('3_', false, true)
+    //     },
+    //     () => {
+    //         cameraOrbit.flyToFloorView('fullHouse')
+    //         ui.clearButtonsToggled(['этаж 1'])
+    //         house.toggleVisible('1_', true, true)
+    //         house.toggleVisible('2_', true)
+    //         house.toggleVisible('3_', true, true)
+    //     },
+    // )
 
     const gui = new GUI()
     gui.domElement.style.left = '0'

@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import { WALK_BLOCK } from '../constants/NAMES'
+import { WALK, WALK_BLOCK } from '../constants/NAMES'
 
 export class Label extends THREE.Object3D {
-    constructor() {
+    constructor(obj) {
         super()
         this.visible = false
 
@@ -11,20 +11,18 @@ export class Label extends THREE.Object3D {
 
         this._raycaster = new THREE.Raycaster()
         this._mouse = new THREE.Vector2()
-        this._coneMesh = new THREE.Mesh(
-            new THREE.ConeGeometry(.5, .5, 16, 1),
-            new THREE.MeshBasicMaterial({ color: 0xff0000 })
-        )
-        this._coneMesh.rotation.x = Math.PI / 2
-        this.add(this._coneMesh)
+        obj.rotation.x = Math.PI / 2
+        const mat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, emissive: 0xFFFFFF })
+        obj.children[0].material = mat
+        this.add(obj)
     }
 
-    move (clientX, clientY) {
+    move(clientX, clientY) {
         if (!this.camera) {
             return
         }
         this._mouse.x = (clientX / window.innerWidth) * 2 - 1
-        this._mouse.y = - (clientY / window.innerHeight) * 2 + 1
+        this._mouse.y = -(clientY / window.innerHeight) * 2 + 1
 
         this._raycaster.setFromCamera(this._mouse, this.camera)
         const intersects = this._raycaster.intersectObjects(this.arrMeshesToWalk, true)
@@ -39,10 +37,10 @@ export class Label extends THREE.Object3D {
 
         this.visible = true
         this.position.copy(intersects[0].point)
-        const n = intersects[ 0 ].face.normal.clone();
+        const n = intersects[0].face.normal.clone();
         n.transformDirection(intersects[0].object.matrixWorld)
         n.multiplyScalar(10)
-        n.add(intersects[0].point );
+        n.add(intersects[0].point);
         this.lookAt(n)
     }
 }

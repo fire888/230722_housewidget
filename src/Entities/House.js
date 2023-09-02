@@ -73,15 +73,25 @@ export class House extends THREE.Object3D {
                     for (let i = 0; i < item.material.length; ++i) {
                         const mat = item.material[i].clone()
                         mat.transparent = true
-                        mat.opacity = 1
                         item.material = mat
                         item.material.needsUpdate = true
+
+                        // if (item.material[i].name === 'Glass_mtl') {
+                        //     item.material[i].transparent = true
+                        //     item.material[i].opacity = .1
+                        //     console.log('^%%^%^')
+                        // }
                     }
                 }
                 if (!item.material.length) {
+                    // if (item.material.name === 'Glass_mtl') {
+                    //     console.log(item.material)
+                    //     item.material.transparent = true
+                    //     item.material.opacity = .1
+                    //     item.material.needsUpdate = true
+                    // }
                     const mat = item.material.clone()
                     mat.transparent = true
-                    mat.opacity = 1
                     item.material = mat
                     item.material.needsUpdate = true
                 }

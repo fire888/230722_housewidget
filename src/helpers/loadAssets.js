@@ -1,6 +1,7 @@
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { TDSLoader } from 'three/examples/jsm/loaders/TDSLoader'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import * as THREE from 'three'
 
 export const loadAssets = (arr, onProgress = () => {}) => {
@@ -11,6 +12,7 @@ export const loadAssets = (arr, onProgress = () => {}) => {
             'imgCube': new THREE.CubeTextureLoader(),
             'gltf': new GLTFLoader(),
             'tdsLoader': new TDSLoader(),
+            'obj': new OBJLoader(),
         }
 
         const assets = {}

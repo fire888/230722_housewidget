@@ -1,0 +1,28 @@
+import {exp} from "three/examples/jsm/nodes/math/MathNode";
+
+export const FLOOR_VIEWS = {
+    'fullHouse': {
+        camPos: [-16.24471289017694,9.51912310908156,-4.546359271099211], targetPos: [-2.6818084100519255,0.46534842763992224,0.8717444216927587]
+    },
+    '1_': {
+        camPos: [3.467508371002247,12.876034389806387,5.45479577035581],
+        targetPos: [0.2196469198074736,-1.4099869843544313,-6.706051827195408],
+    },
+    '2_': {
+        camPos: [3.622523568601783,14.9136519145966,5.092977680390664],
+        targetPos: [0.8358011749270896,0.04990622798469363,-8.059711872104655],
+    },
+}
+
+export const SPEED_PAN = 0.005
+export const CAM_MAX_ROT_X = 0.835
+export const CAM_MIN_ROT_X = -1.04
+export const PLAYER_HEIGHT = 1.6
+export const START_WALK_POSITION = {
+    camPos: [-7.057669205587704,PLAYER_HEIGHT,0.20908005682715258], targetPos: [2.098758329417571,PLAYER_HEIGHT,0.6425327902750235]
+}
+
+
+export const COLOR_BOTTOM = 0x6f6f77
+export const COLOR_BACK = 0x5577aa
+

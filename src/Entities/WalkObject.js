@@ -1,23 +1,34 @@
 import * as THREE from 'three'
 import { Label } from "./Label"
 import { moveObject1ToPos } from "../helpers/helpers3D"
+import {
+    SPEED_PAN,
+    CAM_MAX_ROT_X,
+    CAM_MIN_ROT_X,
+    PLAYER_HEIGHT,
+    START_WALK_POSITION,
+} from '../constants/CONSTANTS'
 
-const SPEED_PAN = 0.005
-const CAM_MAX_ROT_X = 0.835
-const CAM_MIN_ROT_X = -1.04
-const PLAYER_HEIGHT = 1.6
 
 export class WalkObject extends THREE.Object3D {
     constructor() {
         super()
-        this.position.set(0, 1.7, 10)
+        console.log(START_WALK_POSITION)
+        this.position.set(...START_WALK_POSITION.camPos)
+
         this.camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 100000)
+
         this.add(this.camera)
         this.label = new Label()
         this.label.camera = this.camera
 
         const savedMousePos = new THREE.Vector2()
-        let savedRotationY = 0
+
+        const obHelp = new THREE.Object3D()
+        obHelp.position.set(...START_WALK_POSITION.targetPos)
+        this.lookAt(obHelp.position)
+        this.rotation.y += Math.PI
+        let savedRotationY = this.rotation.y
         let savedRotationX = 0
 
         const panCamera = (clientX, clientY) => {

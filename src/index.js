@@ -16,14 +16,15 @@ async function runApplication () {
 
     const house = new House(assets.Rizhskiy_s1f2_WB_detachWalls.model)
     studio.addToScene(house)
+    house.toggleVisible('Riz_S1F2_Ceiling_All', false)
 
     const land = new Land()
     studio.addToScene(land)
 
     const walkObject = new WalkObject()
     walkObject.setMeshesToWalk(house.arrMeshesToWalk)
-    studio.addToScene(walkObject.label)
     studio.addToScene(walkObject)
+    studio.addToScene(walkObject.label)
 
     const cameraOrbit = new CameraOrbit(studio.renderer)
     studio.setCamera(cameraOrbit)
@@ -36,6 +37,7 @@ async function runApplication () {
         () => {
             cameraOrbit.flyToObject(walkObject.camera, walkObject.camera.fov)
             timer = setTimeout(() => {
+                house.toggleVisible('Riz_S1F2_Ceiling_All', true)
                 studio.setCamera(walkObject.camera)
                 walkObject.toggleActive(true)
                 house.resetOpacity()
@@ -43,6 +45,7 @@ async function runApplication () {
         },
         () => {
             clearTimeout(timer)
+            house.toggleVisible('Riz_S1F2_Ceiling_All', false)
             walkObject.toggleActive(false)
             studio.setCamera(cameraOrbit)
             cameraOrbit.flyFromObjectToSavedPos(walkObject.camera)

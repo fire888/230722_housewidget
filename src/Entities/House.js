@@ -20,7 +20,6 @@ export const PARAMS_OPACITY = {
 export class House extends THREE.Object3D {
     constructor(model) {
         super()
-        //model.rotation.x = -Math.PI / 2
         this.add(model.scene)
 
         /** find normals for hide walls */

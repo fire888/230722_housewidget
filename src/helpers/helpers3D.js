@@ -15,3 +15,9 @@ export const moveObject1ToPos = (mesh, [x, y, z]) => {
         .start()
 }
 
+export const angleFromCoords = (x, y) => {
+    let rad = Math.atan(y / x)
+    x < 0 && y > 0 && (rad = Math.PI - Math.abs(rad))
+    x < 0 && y <= 0 && (rad = Math.PI + Math.abs(rad))
+    return rad
+}

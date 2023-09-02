@@ -1,21 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as TWEEN from '@tweenjs/tween.js'
-
-export const FLOOR_VIEWS = {
-    'fullHouse': {
-        camPos: [10.379738891322047,10.771231202425867,6.478077255964495],
-        targetPos: [-0.4349661217133709,-0.12003423123267605,-6.410386296166905]
-    },
-    '1_': {
-        camPos: [3.467508371002247,12.876034389806387,5.45479577035581],
-        targetPos: [0.2196469198074736,-1.4099869843544313,-6.706051827195408],
-    },
-    '2_': {
-        camPos: [3.622523568601783,14.9136519145966,5.092977680390664],
-        targetPos: [0.8358011749270896,0.04990622798469363,-8.059711872104655],
-    },
-}
+import { FLOOR_VIEWS } from '../constants/CONSTANTS'
 
 export class CameraOrbit extends THREE.PerspectiveCamera {
     constructor (renderer) {

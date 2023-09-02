@@ -1,7 +1,6 @@
 import * as THREE from 'three';
+import { COLOR_BACK } from '../constants/CONSTANTS'
 
-
-const BACK_COLOR = 0x5577aa
 
 export const createStudio = () => {
     const container = document.querySelector('.scene-container')
@@ -12,13 +11,13 @@ export const createStudio = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setClearColor(BACK_COLOR)
+    renderer.setClearColor(COLOR_BACK)
     //renderer.shadowMap.enabled = true;
     //renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
     container.appendChild(renderer.domElement)
 
-    const fog = new THREE.Fog(BACK_COLOR, 0, 100)
+    const fog = new THREE.Fog(COLOR_BACK, 0, 100)
     scene.fog = fog
 
     const light = new THREE.PointLight(0xffffff, 300)

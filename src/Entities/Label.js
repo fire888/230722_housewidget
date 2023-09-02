@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { WALK, WALK_BLOCK } from '../constants/NAMES'
+import { WALK_BLOCK } from '../constants/NAMES'
 
 export class Label extends THREE.Object3D {
     constructor() {

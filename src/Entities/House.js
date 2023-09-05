@@ -87,9 +87,13 @@ export class House extends THREE.Object3D {
         super()
         this.add(model.scene)
 
+        console.log(model.scene)
+
         /** find normals for hide walls */
         this._arrItemsToHideByOrbit = []
         model.scene.traverse(item => {
+
+
             if (item.name.includes('lf')) {
                 item.visible = false
                 const { array } = item.geometry.attributes.position

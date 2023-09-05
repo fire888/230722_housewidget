@@ -1,6 +1,6 @@
 import { ASSETS } from './constants/ASSETS'
 import { createStudio } from './Entities/Studio'
-import { loadAssets } from './helpers/loadAssets'
+import { loadAssets, parseGlbInputFile } from './helpers/loadAssets'
 import { House, PARAMS_OPACITY } from "./Entities/House"
 import { Land } from "./Entities/Land"
 import { CameraOrbit } from "./Entities/CameraOrbit"
@@ -8,16 +8,22 @@ import { WalkObject } from "./Entities/WalkObject"
 import { createUi } from "./ui/ui"
 import * as TWEEN from "@tweenjs/tween.js"
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+import { createInputLoadFile } from './ui/inputLoadFile'
 
 
 async function runApplication () {
     const studio = createStudio()
-    const assets = await loadAssets(ASSETS, () => {})
 
+    const file = await createInputLoadFile()
+    const glb = await parseGlbInputFile(file)
+
+    const assets = await loadAssets(ASSETS, () => {})
     const startScreen = document.querySelector('.progress-wrapper')
     document.body.removeChild(startScreen)
 
-    const house = new House(assets.Rizhskiy_s1f2_WB_detachWalls.model)
+    //const house = new House(assets.Rizhskiy_s1f2_WB_detachWalls.model)
+    const house = new House(glb)
+
     studio.addToScene(house)
     house.toggleVisible('Ceiling', false)
 

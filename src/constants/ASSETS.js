@@ -4,6 +4,6 @@ import labelObjSrc from '../assets/label.obj'
 
 export const ASSETS = [
   //  { key: 'house', src: houseSrc, typeLoader: 'tdsLoader' },
-    { key: 'Rizhskiy_s1f2_WB_detachWalls', src: Rizhskiy_s1f2_WB_detachWalls, typeLoader: 'gltf' },
+   // { key: 'Rizhskiy_s1f2_WB_detachWalls', src: Rizhskiy_s1f2_WB_detachWalls, typeLoader: 'gltf' },
     { key: 'label', src: labelObjSrc, typeLoader: 'obj' },
 ]

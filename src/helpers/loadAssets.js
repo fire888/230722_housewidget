@@ -4,6 +4,25 @@ import { TDSLoader } from 'three/examples/jsm/loaders/TDSLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import * as THREE from 'three'
 
+
+export const parseGlbInputFile = f => {
+    return new Promise(res => {
+        const loader = new GLTFLoader()
+        const url = URL.createObjectURL(f)
+        loader.load(
+            url,
+            function ( gltf ) {
+                res(gltf)
+                URL.revokeObjectURL(url)
+            },
+            function () {},
+            function () {
+                URL.revokeObjectURL(url)
+            }
+        )
+    })
+}
+
 export const loadAssets = (arr, onProgress = () => {}) => {
     return new Promise(res => {
         const loaders = {

@@ -1,5 +1,5 @@
 // import houseSrc from '../assets/house.3DS'
-import Rizhskiy_s1f2_WB_detachWalls from '../assets/Rizhskiy_s1f2_WB_detachWalls.glb'
+//import Rizhskiy_s1f2_WB_detachWalls from '../assets/Rizhskiy_s1f2_WB_detachWalls.glb'
 import labelObjSrc from '../assets/label.obj'
 
 export const ASSETS = [

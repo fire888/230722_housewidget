@@ -15,73 +15,6 @@ export const PARAMS_OPACITY = {
     'max_dist': 7,
 }
 
-const NAMES_TO_HIDE_BY_LINE = {
-    'lf1': [
-        'Riz_S1F2_Wall_5_1',
-        'Riz_S1F2_Wall_5_2',
-        'Riz_S1F2_Wall_5_3_aaa',
-        'Riz_S1F2_Wall_5_3',
-        'Riz_S1F2_Wall_5_4',
-    ],
-    'lf2': [
-        'Riz_S1F2_Wall_4_1',
-        'Riz_S1F2_Wall_4_2',
-        'Riz_S1F2_Wall_4_3',
-        'Riz_S1F2_Wall_4_4',
-
-        'Riz_S1F2_W_Glass_2',
-        'Riz_S1F2_W_Glass_1',
-
-        'Riz_S1F2_Windows_2',
-        'Riz_S1F2_Windows_1',
-
-        'Riz_S1F2_Heat_Radiator_1400x500_1',
-        'Riz_S1F2_Heat_Radiator_1400x500_2',
-    ],
-    'lf3': [
-        'Riz_S1F2_Wall_3_1a',
-        'Riz_S1F2_Wall_3_1b',
-        'Riz_S1F2_Wall_3_2',
-        'Riz_S1F2_Wall_3_3',
-        'Riz_S1F2_Wall_3_3a',
-        'Riz_S1F2_Wall_3_3b',
-        'Riz_S1F2_Wall_3_3d',
-        'Riz_S1F2_Wall_3_4',
-
-        'Riz_S1F2_Wall_1_1',
-        'Riz_S1F2_Wall_1_2',
-        'Riz_S1F2_Wall_1_3',
-        'Riz_S1F2_Wall_1_4',
-
-        'Riz_S1F2_Wall_7_1',
-        'Riz_S1F2_Wall_7_2',
-        'Riz_S1F2_Wall_7_3',
-        'Riz_S1F2_Wall_7_4',
-    ],
-    'lf4': [
-        'Riz_S1F2_Wall_2_1',
-        'Riz_S1F2_Wall_2_2',
-        'Riz_S1F2_Wall_2_3',
-        'Riz_S1F2_Wall_2_4',
-
-        'Riz_S1F2_Wall_8_1',
-        'Riz_S1F2_Wall_8_2',
-        'Riz_S1F2_Wall_8_3',
-        'Riz_S1F2_Wall_8_4',
-    ],
-
-    'lf5': [
-        'Riz_S1F2_Wall_6_1',
-        'Riz_S1F2_Wall_6_2',
-        'Riz_S1F2_Wall_6_3',
-        'Riz_S1F2_Wall_6_4',
-
-        'Riz_S1F2_W_Glass_3',
-        'Riz_S1F2_Heat_Radiator_1400x500_3',
-        'Riz_S1F2_Windows_3',
-    ],
-}
-
 export class House extends THREE.Object3D {
     constructor(model) {
         super()
@@ -94,26 +27,38 @@ export class House extends THREE.Object3D {
         model.scene.traverse(item => {
 
 
-            if (item.name.includes('lf')) {
+            if (item.name.includes('normal')) {
                 item.visible = false
                 const { array } = item.geometry.attributes.position
                 const v1 = new THREE.Vector3(array[0], array[1], array[2]).applyMatrix4(item.matrix)
                 const v2 = new THREE.Vector3(array[3], array[4], array[5]).applyMatrix4(item.matrix)
                 v2.sub(v1).normalize()
-                if (NAMES_TO_HIDE_BY_LINE[item.name]) {
-                    for (let i = 0; i < NAMES_TO_HIDE_BY_LINE[item.name].length; ++i) {
-                        const key = NAMES_TO_HIDE_BY_LINE[item.name][i]
-                        const m = model.scene.getObjectByName(key)
-                        if (!m) {
-                            // console.log('cant find mesh by normalLine:', item.name, key)
-                        } else {
-                            m.userData.normal = v2
-                            m.userData.positionNormal = v1
-                            m.userData.isCanShowByOrbit = true
-                            this._arrItemsToHideByOrbit.push(m)
-                        }
+
+                model.scene.traverse(itemMesh => {
+                    if (!itemMesh.userData || !itemMesh.userData.normalName || itemMesh.userData.normalName !== item.name) {
+                        return
                     }
-                }
+                    itemMesh.userData.normal = v2
+                    itemMesh.userData.positionNormal = v1
+                    itemMesh.userData.isCanShowByOrbit = true
+                    this._arrItemsToHideByOrbit.push(itemMesh)
+                })
+
+
+                // if (NAMES_TO_HIDE_BY_LINE[item.name]) {
+                //     for (let i = 0; i < NAMES_TO_HIDE_BY_LINE[item.name].length; ++i) {
+                //         const key = NAMES_TO_HIDE_BY_LINE[item.name][i]
+                //         const m = model.scene.getObjectByName(key)
+                //         if (!m) {
+                //             // console.log('cant find mesh by normalLine:', item.name, key)
+                //         } else {
+                //             m.userData.normal = v2
+                //             m.userData.positionNormal = v1
+                //             m.userData.isCanShowByOrbit = true
+                //             this._arrItemsToHideByOrbit.push(m)
+                //         }
+                //     }
+                // }
 
             }
         })
